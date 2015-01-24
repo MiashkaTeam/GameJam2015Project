@@ -10,6 +10,8 @@ public class Game : MonoBehaviour {
 	private List<GameObject[]> renderedPaths = new List<GameObject[]>(5);
 	private int pos = 0;
 
+	private List<Player> players = new List<Player>();
+
 	private void renderPathRowFor(int x) {
 		if (x < 0) {
 			x = columns + x;
@@ -43,6 +45,7 @@ public class Game : MonoBehaviour {
 		this.map.generateMap();
 		this.MoveToNextMapTile();
 		Camera.main.transform.position = new Vector3 (this.map.StartX, this.map.StartY * 3.0f + 0.4f, 0.0f);
+		this.players.Add (new Player());
 		//Debug.Log (this.map.ToString ());
 		//System.IO.File.WriteAllText ("Z:\\map.txt", this.map.ToString ());
 		//Application.Quit ();
@@ -51,6 +54,21 @@ public class Game : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	void OnGUI() {
+		GUI.color = new Color (200, 200, 200);
+		float h = 20.0f;
+		GUI.Label (new Rect (10.1f, 10.8f, 90.15f, h), "<size=14>Players</size>");
+		GUI.Label (new Rect (70.15f, 10.8f, 90.15f, h), "<size=14>Speed</size>");
+		GUI.Label (new Rect (120.1f, 10.8f, 90.15f, h), "<size=14>Power</size>");
+		GUI.color = new Color (230, 230, 230);
+		for (int i = 0; i < this.players.Count; i++) {
+			int n = i + 1;
+			GUI.Label (new Rect (10.1f, 10.8f + h * n, 90.15f, h), "<size=12><b>#"+ n.ToString()+"</b></size>");
+			GUI.Label (new Rect (70.15f, 10.8f + h * n, 90.15f, h), "<size=12>"+this.players[i].speed.ToString()+"</size>");
+			GUI.Label (new Rect (120.1f, 10.8f + h * n, 90.15f, h), "<size=12>"+this.players[i].powerups.ToString()+"</size>");
+		}
 	}
 
 }
