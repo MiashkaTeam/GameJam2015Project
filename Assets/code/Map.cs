@@ -59,11 +59,23 @@ public class Map {
 	protected Direction GetRandomDirection(params Direction[] PossibleValues) {
 		return PossibleValues[Random.Range(0, PossibleValues.Length)];
 	}
+
+	public int StartY {
+		get {
+			return Mathf.FloorToInt(this.height / 2.0f);
+		}
+	}
+
+	public int StartX {
+		get {
+			return 0;
+		}
+	}
 	
 	public void generateColumn (int x)
 	{
-		if (x == 0) {
-			this.directions [0, Mathf.FloorToInt(this.height / 2.0f)] = Direction.Default;
+		if (x == this.StartX) {
+			this.directions [this.StartX, this.StartY] = Direction.Default;
 		} else {
 			int t = 0;
 			for (int y = 0; y < this.height; y++) {
@@ -108,10 +120,10 @@ public class Map {
 		if (this.directions [x, y] == Direction.Missing)
 			return null;
 		GameObject ret = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		ret.AddComponent<Animation>();
-		ret.AddComponent<MeshFilter>();
-		ret.AddComponent<MeshCollider>();
-		ret.AddComponent<MeshRenderer>();
+		//ret.AddComponent<Animation>();
+		//ret.AddComponent<MeshFilter>();
+		//ret.AddComponent<MeshCollider>();
+		//ret.AddComponent<MeshRenderer>();
 		ret.transform.localScale = new Vector3(2.0f, 0.1f, 1.0f);
 		ret.transform.localPosition = new Vector3 (0.0f, (float)y, 0.0f);
 		switch (this.directions[x, y]) {
@@ -124,6 +136,14 @@ public class Map {
 			case Direction.ToUp:
 				ret.transform.Rotate(new Vector3(0, 0, -30));
 			break;
+		}
+		return ret;
+	}
+
+	public GameObject[] CreateGameObjectFor(int x) {
+		GameObject[] ret = new GameObject[this.height];
+		for(int y = 0; y < this.height; y++) {
+			ret[y] = this.CreateGameObjectFor(x, y);
 		}
 		return ret;
 	}
