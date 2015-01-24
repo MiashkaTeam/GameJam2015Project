@@ -104,6 +104,30 @@ public class Map {
 		}
 	}
 
+	public GameObject CreateGameObjectFor(int x, int y) {
+		if (this.directions [x, y] == Direction.Missing)
+			return null;
+		GameObject ret = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		ret.AddComponent<Animation>();
+		ret.AddComponent<MeshFilter>();
+		ret.AddComponent<MeshCollider>();
+		ret.AddComponent<MeshRenderer>();
+		ret.transform.localScale = new Vector3(2.0f, 0.1f, 1.0f);
+		ret.transform.localPosition = new Vector3 (0.0f, (float)y, 0.0f);
+		switch (this.directions[x, y]) {
+			case Direction.Default:
+				// do nothing
+			break;
+			case Direction.ToDown:
+				ret.transform.Rotate(new Vector3(0, 0, 30));
+			break;
+			case Direction.ToUp:
+				ret.transform.Rotate(new Vector3(0, 0, -30));
+			break;
+		}
+		return ret;
+	}
+
 	public override string ToString ()
 	{
 		string ret = "";
