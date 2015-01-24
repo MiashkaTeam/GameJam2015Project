@@ -1,8 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using UnityEngine.Random;
+using UnityEngine;
 
 public class Map {
 	
@@ -56,39 +55,50 @@ public class Map {
 			this.generateColumn(x);
 		}
 	}
+
+	protected Direction GetRandomDirection(params Direction[] PossibleValues) {
+		return PossibleValues[Random.Range(0, PossibleValues.Length)];
+	}
 	
 	public void generateColumn (int x)
 	{
 		if (x == 0) {
-			this.directions [0, 3] = Direction.Default;
+			this.directions [0, Mathf.FloorToInt(this.height / 2.0f)] = Direction.Default;
 		} else {
-			Direction r;
-			Array values = Enum.GetValues(typeof(Direction));
+			int t = 0;
 			for (int y = 0; y < this.height; y++) {
 				switch (this.directions [x - 1, y]) {
-				case Direction.Default:
-					this.directions [x, y] = (Direction)values.GetValue(random.Next(values.Length));
-					break;
-				case Direction.Missing:
-					if ((x - 2) < 1 || this.directions [x - 2, y] == Direction.Missing) {
-						continue;
-					}						
-					this.directions [x, y] = Direction.Default;
-					break;
-				case Direction.ToDown:
-					r = (Direction)values.GetValue(random.Next(values.Length));
-					if (r == Direction.ToUp) {
-						r = Direction.ToDown;
-					} 		
-					if (y > 0) {
-						this.directions [x, y - 1] = r;
-					} 
-					break;
-				case Direction.ToUp:
-					if ((y - 1) >= this.height) {
-						this.directions [x, y + 1] = (Direction)values.GetValue(random.Next(values.Length));
-					}
-					break;
+					case Direction.Default:
+						this.directions [x, y] = this.GetRandomDirection(
+							Direction.Default,
+							Direction.Missing,
+							Direction.ToDown,
+							Direction.ToUp
+						);
+						break;
+					case Direction.Missing:
+						t = x - 2;
+						if (t < 0 || this.directions [t, y] == Direction.Missing) continue;
+						this.directions [x, y] = Direction.Default;
+						break;
+					case Direction.ToUp:
+						t = y - 1;
+						if (t < 0) continue;
+						this.directions [x, t] = this.GetRandomDirection(
+							Direction.Default,
+							Direction.Missing,
+							Direction.ToUp
+						);
+						break;
+					case Direction.ToDown:
+						t = y + 1;
+						if (t >= this.height) continue;
+						this.directions [x, t] = this.GetRandomDirection(
+							Direction.Default,
+							Direction.Missing,
+							Direction.ToDown
+						);
+						break;
 				}
 			}
 		}
@@ -117,7 +127,7 @@ public class Map {
 			}
 			ret += "\n";
 		}
-		return ret;
+		return ret.Substring(0, ret.Length-1);
 	}
 
 }
