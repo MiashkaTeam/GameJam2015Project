@@ -12,6 +12,16 @@ public class Game : MonoBehaviour {
 
 	private List<Player> players = new List<Player>();
 
+	private Timer tmrPowerUps;
+
+	private void tmrPowerUpsElapsed() {
+		for (int i = 0; i < this.players.Count; i++) {
+			if (this.players[i].powerups == 5)
+				continue;
+			this.players[i].powerups += 1;
+		}
+	}
+
 	private void renderPathRowFor(int x) {
 		if (x < 0) {
 			x = columns + x;
@@ -46,13 +56,15 @@ public class Game : MonoBehaviour {
 		this.MoveToNextMapTile();
 		Camera.main.transform.position = new Vector3 (this.map.StartX, this.map.StartY * 3.0f + 0.4f, 0.0f);
 		this.players.Add (new Player());
-		//Debug.Log (this.map.ToString ());
+		this.tmrPowerUps = new Timer(3f, true, this.tmrPowerUpsElapsed);
+		StartCoroutine (this.tmrPowerUps.Start ());
+		Debug.Log ( this.map.ToString ());
 		//System.IO.File.WriteAllText ("Z:\\map.txt", this.map.ToString ());
 		//Application.Quit ();
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void Update () { 
 	
 	}
 
