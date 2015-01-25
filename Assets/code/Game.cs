@@ -61,9 +61,9 @@ public class Game : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () { 
-		for (int i = 0; i < this.players.Count; i++) {
-			this.players[i].Update();
-		}
+	//	for (int i = 0; i < this.players.Count; i++) {
+	//		this.players[i].Update();
+	//	}
 	}
 
 	void OnGUI() {
@@ -72,12 +72,14 @@ public class Game : MonoBehaviour {
 		GUI.Label (new Rect (10.1f, 10.8f, 90.15f, h), "<size=14>Players</size>");
 		GUI.Label (new Rect (70.15f, 10.8f, 90.15f, h), "<size=14>Speed</size>");
 		GUI.Label (new Rect (120.1f, 10.8f, 90.15f, h), "<size=14>Power</size>");
+		GUI.Label (new Rect (170.1f, 10.8f, 90.15f, h), "<size=14>Length</size>");
 		GUI.color = new Color (230, 230, 230);
 		for (int i = 0; i < this.players.Count; i++) {
 			int n = i + 1;
 			GUI.Label (new Rect (10.1f, 10.8f + h * n, 90.15f, h), "<size=12><b>#"+ n.ToString()+"</b></size>");
 			GUI.Label (new Rect (70.15f, 10.8f + h * n, 90.15f, h), "<size=12>"+this.players[i].speed.ToString()+"</size>");
 			GUI.Label (new Rect (120.1f, 10.8f + h * n, 90.15f, h), "<size=12>"+this.players[i].powerups.ToString()+"</size>");
+			GUI.Label (new Rect (170.1f, 10.8f + h * n, 90.15f, h), "<size=12>"+this.players[i].x.ToString()+"</size>");
 		}
 	}
 

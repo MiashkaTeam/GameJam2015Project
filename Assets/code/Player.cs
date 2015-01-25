@@ -56,7 +56,9 @@ public class Player: MonoBehaviour
 		}
 
 		public void Start() {
-			Instantiate (this.model, this.transform.position, Quaternion.identity);
+			GameObject t = Instantiate(this.model, this.transform.position, Quaternion.identity) as GameObject;			
+			t.transform.parent = this.transform;
+			this.isRunning = true;
 		}
 
 		public void Update() {
