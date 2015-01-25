@@ -1,24 +1,30 @@
 using UnityEngine;
 
-public class Player
+public class Player: MonoBehaviour
 {
-		public readonly GameObject model;
-		public readonly float maxSpeed;
-		public readonly int maxPowerups;
-		public readonly int maxMapX;		
+		public GameObject model;
+		public float maxSpeed;
+		public int maxPowerups;
+		public int maxMapX;
+		public Vector3 eyesCamPos;
 
 		private float _speed = 0.0f;
 		private int _powerups = 0;
-		private float _x = 0.0f;
 
 		public bool isRunning = false;
 
-		public Player(GameObject model, float maxSpeed, int maxPowerups, int maxMapX) {
+		public Player() {
+			
+		}
+
+		public Player(GameObject model, float maxSpeed, int maxPowerups, int maxMapX, Vector3 eyesCamPos, Vector3 pos) {
 			this.model = model;
 			this.maxMapX = maxMapX;
 			this.maxPowerups = maxPowerups;
 			this.maxSpeed = maxSpeed;
 			this.isRunning = true;
+			this.eyesCamPos = eyesCamPos;
+			this.transform.position = pos;			
 		}
 
 		public int powerups {
@@ -35,13 +41,13 @@ public class Player
 
 		public float x {
 			get {
-				return this._x;
+				return this.transform.position.x;
 			}
 		}
 
 		public int mapPosX {
 			get {
-				int ret = Mathf.FloorToInt(this._x);
+				int ret = Mathf.FloorToInt(this.transform.position.x);
 				if (ret > this.maxMapX) {
 					ret = this.maxMapX % ret;
 				}
@@ -49,12 +55,16 @@ public class Player
 			}
 		}
 
+		public void Start() {
+			Instantiate (this.model, this.transform.position, Quaternion.identity);
+		}
+
 		public void Update() {
 			if (isRunning) {
 				if (this._speed < this.maxSpeed) {
 					this._speed = Mathf.Clamp (this._speed + this.maxSpeed / this.maxMapX, 0.0f, this.maxSpeed);
-				}			
-				this._x += this._speed;
+				}
+				this.transform.position += new Vector3(this._speed, 0.0f, 0.0f);
 				if (this._powerups < this.maxPowerups) {
 					this._powerups = Mathf.Clamp (this._powerups + ((System.DateTime.UtcNow.Second % 3 == 0)?1:0), 0, this.maxPowerups);
 				}

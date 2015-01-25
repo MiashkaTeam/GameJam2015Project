@@ -13,14 +13,6 @@ public class Game : MonoBehaviour {
 
 	private List<Player> players = new List<Player>();
 
-	private Timer tmrPowerUps;
-
-	private void tmrPowerUpsElapsed() {
-		for (int i = 0; i < this.players.Count; i++) {
-			this.players[i].Update();
-		}
-	}
-
 	private void renderPathRowFor(int x) {
 		if (x < 0) {
 			x = columns + x;
@@ -52,11 +44,16 @@ public class Game : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		this.map.generateMap();
-		Camera.main.transform.position = new Vector3 (this.map.StartX, this.map.StartY * 3.0f + 0.4f, 0.0f);
-		this.players.Add (new Player(this.PlayerModel, 0.1f, 5, columns));
+		this.players.Add (Camera.main.gameObject.AddComponent<Player> ());
+		this.players [0].model = this.PlayerModel;
+		this.players [0].maxSpeed = 0.1f;
+		this.players [0].maxPowerups = 5;
+		this.players [0].maxMapX = columns;
+		this.players [0].eyesCamPos = new Vector3 (1.0f, 1.0f, 1.0f);
+		this.players [0].transform.position = new Vector3 (this.map.StartX, this.map.StartY * 3.0f + 0.4f, 0.0f);
 		this.MoveToNextMapTile();
-		this.tmrPowerUps = new Timer(3f, true, this.tmrPowerUpsElapsed);
-		StartCoroutine (this.tmrPowerUps.Start ());
+		//this.tmrPowerUps = new Timer(3f, true, this.tmrPowerUpsElapsed);
+		//StartCoroutine (this.tmrPowerUps.Start ());
 		Debug.Log ( this.map.ToString ());
 		//System.IO.File.WriteAllText ("Z:\\map.txt", this.map.ToString ());
 		//Application.Quit ();
@@ -64,7 +61,9 @@ public class Game : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () { 
-	
+		for (int i = 0; i < this.players.Count; i++) {
+			this.players[i].Update();
+		}
 	}
 
 	void OnGUI() {
