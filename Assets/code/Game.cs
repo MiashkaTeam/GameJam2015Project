@@ -8,7 +8,8 @@ public class Game : MonoBehaviour {
 
 	public Map map = new Map(columns, rows);
 	private List<GameObject[]> renderedPaths = new List<GameObject[]>(5);
-	private int pos = 0;
+
+	public GameObject PlayerModel;
 
 	private List<Player> players = new List<Player>();
 
@@ -16,9 +17,7 @@ public class Game : MonoBehaviour {
 
 	private void tmrPowerUpsElapsed() {
 		for (int i = 0; i < this.players.Count; i++) {
-			if (this.players[i].powerups == 5)
-				continue;
-			this.players[i].powerups += 1;
+			this.players[i].Update();
 		}
 	}
 
@@ -44,18 +43,18 @@ public class Game : MonoBehaviour {
 			}
 			this.renderedPaths.RemoveAt(0);
 		} else {
-			this.renderPathRowFor(this.pos);
-			this.renderPathRowFor(++this.pos);
+			this.renderPathRowFor(this.players[0].mapPosX);
+			this.renderPathRowFor(this.players[0].mapPosX + 1);
 		}
-		this.renderPathRowFor(++this.pos);
+		this.renderPathRowFor(this.players[0].mapPosX + 2);
 	}
 
 	// Use this for initialization
 	void Start () {
 		this.map.generateMap();
-		this.MoveToNextMapTile();
 		Camera.main.transform.position = new Vector3 (this.map.StartX, this.map.StartY * 3.0f + 0.4f, 0.0f);
-		this.players.Add (new Player());
+		this.players.Add (new Player(this.PlayerModel, 0.1f, 5, columns));
+		this.MoveToNextMapTile();
 		this.tmrPowerUps = new Timer(3f, true, this.tmrPowerUpsElapsed);
 		StartCoroutine (this.tmrPowerUps.Start ());
 		Debug.Log ( this.map.ToString ());
