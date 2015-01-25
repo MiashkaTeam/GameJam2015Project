@@ -8,6 +8,8 @@ public class Map {
 	private Direction[,] directions;
 	private	int[,] blockLevels;
 	private int _width, _height;
+
+	public static readonly Vector3 PlatformSize = new Vector3(2.0f, 0.1f, 1.0f);
 	
 	public enum Direction: int {
 		Missing = 0,
@@ -116,6 +118,12 @@ public class Map {
 		}
 	}
 
+	public float roundWidth {
+		get {
+			return PlatformSize.x * this.width;
+		}
+	}
+
 	public GameObject CreateGameObjectFor(int x, int y) {
 		if (this.directions [x, y] == Direction.Missing)
 			return null;
@@ -124,7 +132,7 @@ public class Map {
 		//ret.AddComponent<MeshFilter>();
 		//ret.AddComponent<MeshCollider>();
 		//ret.AddComponent<MeshRenderer>();
-		ret.transform.localScale = new Vector3(2.0f, 0.1f, 1.0f);
+		ret.transform.localScale = PlatformSize;
 		ret.transform.localPosition = new Vector3 (0.0f, (float)y, 0.0f);
 		switch (this.directions[x, y]) {
 			case Direction.Default:
